@@ -9,18 +9,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-  /// liste des taches 
+  /// liste des taches
   List<Task> tasks = [];
 
   TextEditingController _titleController = TextEditingController();
 
-  // ajouter une tache 
-  void _addTask(){
-    setState((){
-      tasks.add(Task(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        title: _titleController.text));
+  // ajouter une tache
+  void _addTask() {
+    setState(() {
+      tasks.add(
+        Task(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          title: _titleController.text,
+        ),
+      );
     });
 
     _titleController.clear();
@@ -32,20 +34,35 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('AfriTodo'),
         backgroundColor: Colors.deepPurple,
-        ),
+      ),
 
       body: Column(
         children: [
           Center(
             child: Text(
               'Bienvenue sur l\'application AfriTodo',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: Colors.white,
-              ),
-            )),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium?.copyWith(color: Colors.purple),
+            ),
+          ),
 
-            // add task form 
-           Container(
+          SizedBox(height: 25),
+
+          // add task form
+          Container(
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 10,
+                  offset: Offset(0, 3), // changes position of shadow
+                ),
+              ],
+            ),
             child: Row(
               children: [
                 Expanded(
@@ -56,29 +73,57 @@ class _HomeScreenState extends State<HomeScreen> {
                       border: OutlineInputBorder(),
                     ),
                   ),
-                ), 
+                ),
 
-              SizedBox(width: 8),
+                SizedBox(width: 8),
 
-                // button pour ajouter.  ltache 
+                // button pour ajouter.  la tache
                 ElevatedButton(
                   onPressed: _addTask,
-                  child: Icon(Icons.add),
+                  child: const Icon(Icons.add),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    padding: EdgeInsets.all(12)
-                  )
-                )
+                    padding: EdgeInsets.all(12),
+                  ),
+                ),
               ],
-            )
-           ),
+            ),
+          ),
 
-            // Liste de taches
-            
+          SizedBox(height: 40),
 
-        
+          // Liste de taches
+          Expanded(
+            child: tasks.isEmpty
+                ? Center(child: Text('Aucune tâche à afficher.'))
+                : ListView.builder(
+                    padding: EdgeInsets.all(16),
+                    itemCount: tasks.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(tasks[index].title),
+                        subtitle: Text(tasks[index].description ?? ''),
+                        trailing: Icon(
+                          tasks[index].isCompleted
+                              ? Icons.check_circle
+                              : Icons.circle,
+                          color: tasks[index].isCompleted
+                              ? Colors.green
+                              : Colors.grey,
+                        ),
+                        onTap: () {
+                          // Action pour marquer la tâche comme terminée
+                          setState(() {
+                            tasks[index].isCompleted =
+                                !tasks[index].isCompleted;
+                          });
+                        },
+                      );
+                    },
+                  ),
+          ),
         ],
       ),
 
@@ -89,7 +134,6 @@ class _HomeScreenState extends State<HomeScreen> {
         tooltip: 'Ajouter une tâche',
         child: const Icon(Icons.add),
       ),
-
     );
   }
 }

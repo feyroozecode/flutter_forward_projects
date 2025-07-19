@@ -4,7 +4,7 @@ class Task {
   final String id;
   final String title;
   String? description;
-  final bool isCompleted;
+  bool isCompleted;
   DateTime dateCreated;
   DateTime? dateEcheance;
 
