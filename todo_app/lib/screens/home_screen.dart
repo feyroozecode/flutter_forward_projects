@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/models/task.dart';
+import 'package:todo_app/screens/task_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -32,8 +33,33 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AfriTodo'),
-        backgroundColor: Colors.deepPurple,
+        title: const Text(
+          'AfriTodo',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+        ),
+        backgroundColor: Colors.blue,
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text("Mon Application de Todo \n Version 0.1"),
+                  content: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Text(
+                          "Les fonctionnalitée de mon Application sont : \n Ajouter des Taches \n Afficher la liste",
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+            icon: Icon(Icons.info, color: Colors.white),
+          ),
+        ],
       ),
 
       body: Column(
@@ -43,12 +69,11 @@ class _HomeScreenState extends State<HomeScreen> {
               'Bienvenue sur l\'application AfriTodo',
               style: Theme.of(
                 context,
-              ).textTheme.headlineMedium?.copyWith(color: Colors.purple),
+              ).textTheme.headlineMedium?.copyWith(color: Colors.blue),
             ),
           ),
 
-          SizedBox(height: 25),
-
+          SizedBox(height: 25), // spacement
           // add task form
           Container(
             padding: EdgeInsets.all(16),
@@ -101,24 +126,33 @@ class _HomeScreenState extends State<HomeScreen> {
                 : ListView.builder(
                     padding: EdgeInsets.all(16),
                     itemCount: tasks.length,
+
                     itemBuilder: (context, index) {
                       return ListTile(
                         title: Text(tasks[index].title),
                         subtitle: Text(tasks[index].description ?? ''),
-                        trailing: Icon(
-                          tasks[index].isCompleted
-                              ? Icons.check_circle
-                              : Icons.circle,
+                        trailing: IconButton(
+                          onPressed: () {
+                            // Action pour marquer la tâche comme terminée
+                            setState(() {
+                              tasks[index].isCompleted =
+                                  !tasks[index].isCompleted;
+                            });
+                          },
+                          icon: tasks[index].isCompleted
+                              ? Icon(Icons.check_circle)
+                              : Icon(Icons.circle),
                           color: tasks[index].isCompleted
                               ? Colors.green
                               : Colors.grey,
                         ),
                         onTap: () {
-                          // Action pour marquer la tâche comme terminée
-                          setState(() {
-                            tasks[index].isCompleted =
-                                !tasks[index].isCompleted;
-                          });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TaskDetailScreen(),
+                            ),
+                          );
                         },
                       );
                     },
@@ -127,13 +161,13 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Action for the button
-        },
-        tooltip: 'Ajouter une tâche',
-        child: const Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // Action for the button
+      //   },
+      //   tooltip: 'Ajouter une tâche',
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 }
