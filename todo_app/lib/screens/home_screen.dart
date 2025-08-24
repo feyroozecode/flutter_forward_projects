@@ -128,29 +128,29 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: tasks.length,
 
                     itemBuilder: (context, index) {
+                      final task = tasks[index];
+
                       return ListTile(
-                        title: Text(tasks[index].title),
+                        title: Text(task.title),
                         subtitle: Text(tasks[index].description ?? ''),
                         trailing: IconButton(
                           onPressed: () {
                             // Action pour marquer la tâche comme terminée
                             setState(() {
-                              tasks[index].isCompleted =
-                                  !tasks[index].isCompleted;
+                              task.isCompleted = !task.isCompleted;
                             });
                           },
-                          icon: tasks[index].isCompleted
+                          icon: task.isCompleted
                               ? Icon(Icons.check_circle)
                               : Icon(Icons.circle),
-                          color: tasks[index].isCompleted
-                              ? Colors.green
-                              : Colors.grey,
+                          color: task.isCompleted ? Colors.green : Colors.grey,
                         ),
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => TaskDetailScreen(),
+                              builder: (context) =>
+                                  TaskDetailScreen(task: task),
                             ),
                           );
                         },
